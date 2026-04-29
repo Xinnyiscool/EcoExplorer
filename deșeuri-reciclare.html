@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deșeuri & Reciclare – EcoExplorer</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --glass-bg: rgba(255,255,255,0.18);
+  --glass-border: rgba(255,255,255,0.35);
+  --green-light: #7dbf8e;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: linear-gradient(160deg, #a8d5a2 0%, #4a9e6b 40%, #1e5c3a 100%);
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    radial-gradient(ellipse at 80% 10%, rgba(180,230,160,0.2) 0%, transparent 55%),
+    radial-gradient(ellipse at 10% 90%, rgba(30,92,58,0.3) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+.bubbles-bg { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+.bubble { position: absolute; border-radius: 50%; border: 1.5px solid rgba(255,255,255,0.25); animation: floatBubble linear infinite; opacity: 0; }
+.bubble:nth-child(1)  { left: 10%; width: 30px; height: 30px; animation-duration: 14s; animation-delay: 0s; }
+.bubble:nth-child(2)  { left: 25%; width: 18px; height: 18px; animation-duration: 18s; animation-delay: -3s; }
+.bubble:nth-child(3)  { left: 42%; width: 40px; height: 40px; animation-duration: 22s; animation-delay: -7s; }
+.bubble:nth-child(4)  { left: 58%; width: 22px; height: 22px; animation-duration: 16s; animation-delay: -11s; }
+.bubble:nth-child(5)  { left: 73%; width: 35px; height: 35px; animation-duration: 20s; animation-delay: -4s; }
+.bubble:nth-child(6)  { left: 86%; width: 14px; height: 14px; animation-duration: 12s; animation-delay: -8s; }
+.bubble:nth-child(7)  { left: 5%;  width: 24px; height: 24px; animation-duration: 19s; animation-delay: -14s; }
+.bubble:nth-child(8)  { left: 65%; width: 16px; height: 16px; animation-duration: 15s; animation-delay: -2s; }
+.bubble:nth-child(9)  { left: 90%; width: 28px; height: 28px; animation-duration: 24s; animation-delay: -9s; }
+.bubble:nth-child(10) { left: 35%; width: 12px; height: 12px; animation-duration: 13s; animation-delay: -5s; }
+@keyframes floatBubble {
+  0%   { transform: translateY(110vh) scale(0.8); opacity: 0; }
+  10%  { opacity: 0.5; }
+  50%  { transform: translateY(45vh) scale(1.05); opacity: 0.3; }
+  90%  { opacity: 0.1; }
+  100% { transform: translateY(-10vh) scale(0.9); opacity: 0; }
+}
+.swirl-overlay { position: fixed; right: -60px; bottom: -40px; width: 420px; height: 420px; opacity: 0.07; pointer-events: none; z-index: 0; }
+.wrapper { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 0 24px 80px; }
+
+/* Topbar */
+.topbar { display: flex; justify-content: space-between; align-items: center; padding: 22px 0 0; animation: fadeDown 0.6s ease both; }
+.logo-badge { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.globe-icon { width: 44px; height: 44px; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; backdrop-filter: blur(8px); }
+.logo-text { font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 700; color: white; letter-spacing: 0.02em; line-height: 1.2; }
+.logo-text span { display: block; font-size: 11px; font-style: italic; font-weight: 400; opacity: 0.8; }
+.nav-btn { background: var(--glass-bg); border: 1px solid var(--glass-border); color: white; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; padding: 8px 20px; border-radius: 50px; cursor: pointer; backdrop-filter: blur(8px); transition: background 0.2s, transform 0.15s; letter-spacing: 0.03em; }
+.nav-btn:hover { background: rgba(255,255,255,0.3); transform: translateY(-1px); }
+
+/* Hero */
+.hero { padding: 60px 0 30px; text-align: center; animation: fadeUp 0.7s 0.1s ease both; }
+.hero-eyebrow { display: inline-block; background: rgba(30,92,58,0.35); border: 1px solid rgba(120,220,140,0.4); color: #ccf5d8; font-size: 11px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; padding: 6px 18px; border-radius: 50px; margin-bottom: 20px; backdrop-filter: blur(8px); }
+.hero h1 { font-family: 'Playfair Display', serif; font-size: 50px; font-weight: 700; color: white; line-height: 1.15; margin-bottom: 16px; text-shadow: 0 2px 20px rgba(0,0,0,0.2); }
+.hero h1 em { font-style: italic; color: rgba(200,255,210,0.95); }
+.hero p { font-size: 17px; color: rgba(255,255,255,0.82); font-weight: 300; line-height: 1.7; max-width: 560px; margin: 0 auto 30px; }
+
+/* Stats */
+.stats-row { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; margin-bottom: 50px; animation: fadeUp 0.7s 0.2s ease both; }
+.stat-card { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; padding: 20px 28px; backdrop-filter: blur(12px); text-align: center; min-width: 140px; }
+.stat-num { font-family: 'Playfair Display', serif; font-size: 30px; font-weight: 700; line-height: 1; margin-bottom: 4px; }
+.stat-num.red    { color: #ff8a7a; }
+.stat-num.orange { color: #ffb347; }
+.stat-num.yellow { color: #ffe066; }
+.stat-num.green  { color: #a8f0b8; }
+.stat-label { font-size: 12px; color: rgba(255,255,255,0.65); font-weight: 400; letter-spacing: 0.03em; }
+
+/* Section label */
+.section-label { text-align: center; margin: 0 0 28px; }
+.section-label span { display: inline-block; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: white; font-size: 11px; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; padding: 6px 18px; border-radius: 50px; backdrop-filter: blur(8px); }
+
+/* Cards */
+.cards-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 50px; animation: fadeUp 0.8s 0.3s ease both; }
+.card { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 24px; padding: 28px 20px 22px; backdrop-filter: blur(12px); transition: transform 0.25s, box-shadow 0.25s, background 0.25s; position: relative; overflow: hidden; text-align: center; }
+.card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, transparent, rgba(160,240,180,0.8), transparent); opacity: 0; transition: opacity 0.2s; }
+.card:hover { transform: translateY(-6px); background: rgba(255,255,255,0.26); box-shadow: 0 16px 48px rgba(0,0,0,0.18); }
+.card:hover::before { opacity: 1; }
+.card-icon-wrap { width: 88px; height: 88px; margin: 0 auto 16px; background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.35); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 44px; transition: transform 0.3s; }
+.card:hover .card-icon-wrap { transform: scale(1.1) rotate(-5deg); }
+.card h3 { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 700; color: white; margin-bottom: 8px; line-height: 1.3; }
+.card p { font-size: 13px; color: rgba(255,255,255,0.75); line-height: 1.6; font-weight: 300; margin-bottom: 12px; }
+.card-stat { display: inline-block; background: rgba(160,240,180,0.2); border: 1px solid rgba(160,240,180,0.35); color: #c8f5d8; font-size: 11px; font-weight: 500; padding: 4px 12px; border-radius: 50px; letter-spacing: 0.05em; }
+
+/* Info card */
+.info-card { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 24px; padding: 36px 40px; backdrop-filter: blur(12px); margin-bottom: 50px; animation: fadeUp 0.8s 0.4s ease both; }
+.info-card h2 { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; color: white; margin-bottom: 14px; }
+.info-card > p { font-size: 15px; color: rgba(255,255,255,0.82); line-height: 1.8; font-weight: 300; margin-bottom: 12px; }
+.ocean-facts { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 24px; }
+.ocean-fact { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 16px; padding: 16px 20px; display: flex; align-items: flex-start; gap: 12px; }
+.fact-icon { font-size: 28px; flex-shrink: 0; margin-top: 2px; }
+.ocean-fact h4 { font-size: 14px; font-weight: 500; color: white; margin-bottom: 4px; }
+.ocean-fact p { font-size: 12px; color: rgba(255,255,255,0.65); line-height: 1.5; margin: 0; }
+
+/* Recycle grid */
+.recycle-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 50px; animation: fadeUp 0.8s 0.5s ease both; }
+.recycle-card { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 24px; padding: 24px 20px; backdrop-filter: blur(12px); transition: transform 0.25s, background 0.25s; }
+.recycle-card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.26); }
+.recycle-card.galben  { border-top: 3px solid rgba(255,220,50,0.7); }
+.recycle-card.albastru { border-top: 3px solid rgba(80,160,255,0.7); }
+.recycle-card.verde   { border-top: 3px solid rgba(80,220,120,0.7); }
+.bin-icon { font-size: 28px; margin-bottom: 10px; }
+.recycle-card h3 { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; color: white; margin-bottom: 14px; }
+.recycle-list { display: flex; flex-direction: column; gap: 6px; }
+.recycle-item { font-size: 12px; font-weight: 400; padding: 5px 10px; border-radius: 8px; line-height: 1.4; }
+.recycle-item.yes { background: rgba(100,220,130,0.15); color: #c8f5d0; }
+.recycle-item.no  { background: rgba(220,80,60,0.15);  color: #ffc8c0; }
+
+/* Solutions */
+.solutions-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 50px; animation: fadeUp 0.8s 0.6s ease both; }
+.solution-card { background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.28); border-radius: 20px; padding: 24px 20px; backdrop-filter: blur(10px); text-align: center; transition: transform 0.25s, background 0.25s; }
+.solution-card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.24); }
+.solution-icon { font-size: 40px; margin-bottom: 12px; display: block; }
+.solution-card h4 { font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 700; color: white; margin-bottom: 8px; }
+.solution-card p { font-size: 12px; color: rgba(255,255,255,0.72); line-height: 1.6; font-weight: 300; }
+.solution-tag { display: inline-block; background: rgba(100,200,120,0.25); border: 1px solid rgba(100,200,120,0.4); color: #c8f0d0; font-size: 10px; padding: 3px 10px; border-radius: 50px; margin-top: 10px; letter-spacing: 0.06em; text-transform: uppercase; }
+
+/* Tips */
+.last-card { animation: fadeUp 0.8s 0.65s ease both; }
+.tips-list { display: flex; flex-direction: column; gap: 18px; margin-top: 20px; }
+.tip-item { display: flex; align-items: flex-start; gap: 16px; }
+.tip-num { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: rgba(200,255,210,0.7); min-width: 36px; line-height: 1.2; flex-shrink: 0; }
+.tip-item h4 { font-size: 15px; font-weight: 500; color: white; margin-bottom: 4px; }
+.tip-item p { font-size: 13px; color: rgba(255,255,255,0.68); line-height: 1.6; margin: 0; }
+
+/* Footer */
+.footer-strip { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; animation: fadeUp 0.8s 0.7s ease both; }
+.footer-pill { background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.25); color: rgba(255,255,255,0.7); font-size: 12px; padding: 6px 16px; border-radius: 50px; backdrop-filter: blur(4px); display: flex; align-items: center; gap: 6px; }
+.footer-pill .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green-light); }
+
+@keyframes fadeDown { from { opacity: 0; transform: translateY(-16px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeUp   { from { opacity: 0; transform: translateY(20px);  } to { opacity: 1; transform: translateY(0); } }
+
+@media (max-width: 700px) {
+  .hero h1 { font-size: 32px; }
+  .cards-row, .recycle-grid, .solutions-row { grid-template-columns: 1fr; }
+  .ocean-facts { grid-template-columns: 1fr; }
+  .info-card { padding: 24px 20px; }
+  .stats-row { gap: 10px; }
+}
+</style>
+</head>
+<body>
+
+<div class="bubbles-bg">
+  <div class="bubble"></div><div class="bubble"></div><div class="bubble"></div>
+  <div class="bubble"></div><div class="bubble"></div><div class="bubble"></div>
+  <div class="bubble"></div><div class="bubble"></div><div class="bubble"></div>
+  <div class="bubble"></div>
+</div>
+
+<svg class="swirl-overlay" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M200 20 C280 20, 380 80, 380 200 C380 320, 280 380, 200 380 C120 380, 20 320, 20 200 C20 80, 120 20, 200 20" stroke="white" stroke-width="3" fill="none"/>
+  <path d="M200 60 C260 60, 340 110, 340 200 C340 290, 260 340, 200 340 C140 340, 60 290, 60 200 C60 110, 140 60, 200 60" stroke="white" stroke-width="2" fill="none"/>
+  <path d="M180 100 Q240 80, 280 140 Q320 200, 280 260 Q240 310, 180 300 Q120 290, 100 230 Q80 170, 120 130 Q150 100, 180 100" stroke="white" stroke-width="1.5" fill="none"/>
+</svg>
+
+<div class="wrapper">
+
+  <nav class="topbar">
+    <a class="logo-badge" href="index.html">
+      <div class="globe-icon">🌍</div>
+      <div class="logo-text">EcoExplorer</div>
+    </a>
+    <button class="nav-btn" onclick="history.back()">← Înapoi</button>
+  </nav>
+
+  <section class="hero">
+
+    <h1>Deșeuri & <em>Reciclare</em><br>Ce facem cu gunoiul nostru?</h1>
+    <p>Producem 2.01 miliarde de tone de deșeuri solide pe an la nivel global. Doar 13.5% sunt reciclate. Restul ajunge în gropi de gunoi, oceane și natură.</p>
+  </section>
+
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-num red">2.01 Mld</div><div class="stat-label">tone deșeuri/an global</div></div>
+    <div class="stat-card"><div class="stat-num orange">13.5%</div><div class="stat-label">din deșeuri sunt reciclate</div></div>
+    <div class="stat-card"><div class="stat-num yellow">8 Mln</div><div class="stat-label">tone plastic în oceane/an</div></div>
+    <div class="stat-card"><div class="stat-num green">450 ani</div><div class="stat-label">durează degradarea plasticului</div></div>
+  </div>
+
+  <div class="section-label"><span>Tipuri de deșeuri și impactul lor</span></div>
+
+  <div class="cards-row">
+    <div class="card">
+      <div class="card-icon-wrap">🛍️</div>
+      <h3>Plastic</h3>
+      <p>400 de milioane de tone de plastic sunt produse anual. Doar 9% din tot plasticul produs vreodată a fost reciclat.</p>
+      
+    </div>
+    <div class="card">
+      <div class="card-icon-wrap">📱</div>
+      <h3>Deșeuri Electronice</h3>
+      <p>53.6 milioane tone de e-waste în 2019 — cel mai rapid tip de deșeu în creștere. Conține metale grele toxice.</p>
+     
+    </div>
+    <div class="card">
+      <div class="card-icon-wrap">🍔</div>
+      <h3>Deșeuri Alimentare</h3>
+      <p>O treime din toată hrana produsă global este aruncată — 8% din emisiile globale de gaze cu efect de seră.</p>
+      
+    </div>
+    <div class="card">
+      <div class="card-icon-wrap">🏗️</div>
+      <h3>Deșeuri din Construcții</h3>
+      <p>Demolările și construcțiile generează 30% din deșeurile totale. Betonul și metalul pot fi recuperate eficient.</p>
+      
+    </div>
+    <div class="card">
+      <div class="card-icon-wrap">💊</div>
+      <h3>Deșeuri Medicale</h3>
+      <p>Seringi, medicamente expirate și materiale infectate necesită tratament special. Eliminarea incorectă contaminează apa.</p>
+      
+    </div>
+    <div class="card">
+      <div class="card-icon-wrap">⚗️</div>
+      <h3>Deșeuri Chimice</h3>
+      <p>Vopsele, solvenți, pesticide și baterii conțin substanțe periculoase care otrăvesc pânza freatică.</p>
+      
+    </div>
+  </div>
+
+  <div class="info-card">
+    <h2>🌊 Criza plasticului în oceane</h2>
+    <p>Oceanele lumii conțin acum aproximativ 150 de milioane de tone de plastic. În fiecare minut, echivalentul unui camion de gunoi plin cu plastic ajunge în mare. La ritmul actual, până în 2050 vor fi mai multe plastice decât pești în oceane.</p>
+    <p>Plasticul nu dispare — se fragmentează în microplastice, particule invizibile găsite în sângele uman, în laptele matern și pe vârful Everestului.</p>
+    <div class="ocean-facts">
+      <div class="ocean-fact"><div class="fact-icon">🐠</div><div><h4>700 de specii marine afectate</h4><p>Broaște țestoase, balene, păsări marine — toate înghit plastic confundându-l cu hrană.</p></div></div>
+      <div class="ocean-fact"><div class="fact-icon">🌀</div><div><h4>Great Pacific Garbage Patch</h4><p>O insulă de plastic de 3 ori mărimea Franței plutește în Oceanul Pacific.</p></div></div>
+      <div class="ocean-fact"><div class="fact-icon">🧬</div><div><h4>Microplastice în corpul uman</h4><p>Studiile recente au găsit microplastice în plămâni, ficat, rinichi și chiar în creier.</p></div></div>
+      <div class="ocean-fact"><div class="fact-icon">⏳</div><div><h4>Durata de degradare</h4><p>O sticlă de plastic: 450 ani. Un scutec: 500 ani. Plasa de pescuit: 600 ani.</p></div></div>
+    </div>
+  </div>
+
+  <div class="section-label"><span>Ghidul reciclării corecte</span></div>
+
+  <div class="recycle-grid">
+    <div class="recycle-card galben">
+      <div class="bin-icon">🟡</div>
+      <h3>Plastic & Metal</h3>
+      <div class="recycle-list">
+        <div class="recycle-item yes">✓ Sticle PET</div>
+        <div class="recycle-item yes">✓ Cutii aluminiu</div>
+        <div class="recycle-item yes">✓ Pungi plastic curate</div>
+        <div class="recycle-item yes">✓ Ambalaje plastic</div>
+        <div class="recycle-item no">✗ Plastic murdar cu mâncare</div>
+        <div class="recycle-item no">✗ Plastic combinat cu folie</div>
+      </div>
+    </div>
+    <div class="recycle-card albastru">
+      <div class="bin-icon">🔵</div>
+      <h3>Hârtie & Carton</h3>
+      <div class="recycle-list">
+        <div class="recycle-item yes">✓ Ziare și reviste</div>
+        <div class="recycle-item yes">✓ Cutii de carton</div>
+        <div class="recycle-item yes">✓ Caiete și cărți</div>
+        <div class="recycle-item yes">✓ Plicuri de hârtie</div>
+        <div class="recycle-item no">✗ Hârtie unsuroasă (pizza)</div>
+        <div class="recycle-item no">✗ Hârtie laminată</div>
+      </div>
+    </div>
+    <div class="recycle-card verde">
+      <div class="bin-icon">🟢</div>
+      <h3>Sticlă</h3>
+      <div class="recycle-list">
+        <div class="recycle-item yes">✓ Sticle de vin/bere</div>
+        <div class="recycle-item yes">✓ Borcane conserve</div>
+        <div class="recycle-item yes">✓ Sticle parfum (goale)</div>
+        <div class="recycle-item yes">✓ Pahare de sticlă</div>
+        <div class="recycle-item no">✗ Oglinzi și geamuri</div>
+        <div class="recycle-item no">✗ Becuri și neoane</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label"><span>Soluții pentru un viitor mai curat</span></div>
+
+  <div class="solutions-row">
+    <div class="solution-card"><span class="solution-icon">🔄</span><h4>Economia Circulară</h4><p>Un model economic în care nimic nu devine deșeu — totul este reutilizat, reparat sau reciclat. Poate reduce deșeurile cu 80%.</p><span class="solution-tag">Sistemic</span></div>
+    <div class="solution-card"><span class="solution-icon">🌿</span><h4>Plastic Biodegradabil</h4><p>Ambalaje din amidon de porumb, alge sau ciuperci se degradează în luni, nu secole. Companiile mari încep să adopte.</p><span class="solution-tag">Inovație</span></div>
+    <div class="solution-card"><span class="solution-icon">🏪</span><h4>Magazine Zero Waste</h4><p>Cumpărăturile în vrac cu recipiente proprii elimină ambalajele inutile. Mișcarea zero waste câștigă teren în toată Europa.</p><span class="solution-tag">Personal</span></div>
+    <div class="solution-card"><span class="solution-icon">♻️</span><h4>Reciclare Corectă</h4><p>Dacă toți românii ar recicla corect, am putea reduce deșeurile la groapă cu 60%. Sortarea corectă este primul pas.</p><span class="solution-tag">Imediat</span></div>
+    <div class="solution-card"><span class="solution-icon">🌱</span><h4>Compostare</h4><p>40% din deșeurile menajere sunt organice și pot fi compostate. Compostul îmbogățește solul și înlocuiește îngrășămintele chimice.</p><span class="solution-tag">Acasă</span></div>
+    <div class="solution-card"><span class="solution-icon">📜</span><h4>Legislație Strictă</h4><p>Interdicția pungilor de plastic în UE a redus consumul cu 90% în țările care au aplicat-o. Politicile corecte schimbă comportamente.</p><span class="solution-tag">Politici</span></div>
+  </div>
+
+  <div class="info-card last-card">
+    <h2>💚 Ce poți face TU azi?</h2>
+    <p>Nu trebuie să fii perfect — trebuie să fii mai bun decât ieri. Iată 5 lucruri simple cu impact real:</p>
+    <div class="tips-list">
+      <div class="tip-item"><div class="tip-num">01</div><div><h4>Refuză plasticul de unică folosință</h4><p>Sac de pânză în loc de pungă, sticlă de apă reutilizabilă, paie de metal sau bambus.</p></div></div>
+      <div class="tip-item"><div class="tip-num">02</div><div><h4>Sortează deșeurile acasă</h4><p>Plastic, hârtie, sticlă și organic — 4 coșuri simple care fac o diferență enormă.</p></div></div>
+      <div class="tip-item"><div class="tip-num">03</div><div><h4>Repară înainte să arunci</h4><p>Un hain cusut, un telefon reparat, o mobilă renovată — economia circulară începe acasă.</p></div></div>
+      <div class="tip-item"><div class="tip-num">04</div><div><h4>Cumpără mai puțin, mai bine</h4><p>Un produs durabil produce de 10 ori mai puțin deșeu decât 10 produse ieftine.</p></div></div>
+      <div class="tip-item"><div class="tip-num">05</div><div><h4>Participă la acțiuni de curățenie</h4><p>Let's Do It Romania organizează acțiuni de colectare. Fiecare kilogram de gunoi cules contează.</p></div></div>
+    </div>
+  </div>
+
+  <div class="footer-strip">
+    <div></div>
+</body>
+</html>
